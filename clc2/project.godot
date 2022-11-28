@@ -42,17 +42,6 @@ config/name="CLCProject"
 run/main_scene="res://scn_level1.tscn"
 config/icon="res://icon.png"
 
-[autoload]
-
-PluginSettings="*res://addons/github-integration/scripts/PluginSettings.gd"
-IconLoaderGithub="*res://addons/github-integration/scripts/IconLoaderGithub.gd"
-UserData="*res://addons/github-integration/scripts/user_data.gd"
-RestHandler="*res://addons/github-integration/scenes/RestHandler.tscn"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "res://addons/github-integration/plugin.cfg" )
-
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
