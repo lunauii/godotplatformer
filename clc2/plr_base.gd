@@ -3,12 +3,15 @@ extends KinematicBody2D
 var velocity = Vector2(0, 0)
 var jumpsLeft = 0
 const SPEED = 25
-const GRAVITY = 20
-const JUMPFORCE = -900
+const GRAVITY = 30
+const JUMPFORCE = -950
+const TERMINALVELOCITY = 1000
 
 func _physics_process(delta):
 	
-	velocity.y = velocity.y + 30
+	velocity.y = velocity.y+GRAVITY
+	if velocity.y >= TERMINALVELOCITY:
+		velocity.y = TERMINALVELOCITY
 	
 	if Input.is_action_pressed("right"):
 		velocity.x += SPEED
@@ -40,3 +43,12 @@ func _physics_process(delta):
 	
 	velocity.x = lerp(velocity.x, 0, 0.1)
  
+
+
+
+func _on_fallzone_body_entered(body):
+	get_tree().change_scene("res://scn_level1.tscn")
+	#makes the player fucking die when out of bounds
+	
+	
+	
