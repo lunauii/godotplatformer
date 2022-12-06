@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+signal coin_collected
+
 var velocity = Vector2(0, 0)
 var jumpsLeft = 0
 const SPEED = 25
@@ -26,8 +28,6 @@ func _physics_process(delta):
 	else:
 		$Sprite.play("idle")
 		
-	print(velocity.x)
-		
 	if not is_on_floor():
 		$Sprite.play("jump")
 	elif is_on_floor():
@@ -42,13 +42,36 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
 	velocity.x = lerp(velocity.x, 0, 0.1)
- 
-
 
 
 func _on_fallzone_body_entered(body):
 	get_tree().change_scene("res://scn_level1.tscn")
-	#makes the player fucking die when out of bounds
+	
+
+func bounce():
+	velocity.y = JUMPFORCE * 0.725
 	
 	
+func hurt(var enemyposx):
+	set_modulate(Color(1, 0.3, 0.3, 0.34))
+	velocity.y = JUMPFORCE * 0.5
 	
+	if position.x < enemyposx:
+		velocity.x = -750
+	elif position.x > enemyposx:
+		velocity.x = 750
+	else:
+		pass
+	
+	Input.action_release("left")
+	Input.action_release("right")
+	
+	$Timer.start()
+
+func add_coin():
+	emit_signal("coin_collected")
+
+	
+	
+func _on_Timer_timeout():
+	get_tree().change_scene("res://scn_level1.tscn")
