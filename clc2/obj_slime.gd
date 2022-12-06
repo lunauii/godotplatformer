@@ -15,6 +15,8 @@ func _ready():
 	$floor_check.position.x = $CollisionShape2D.shape.get_extents().x * direction
 	$floor_check.enabled = canDetectEdge
 	if canDetectEdge:
+		set_modulate(Color(1, 1, 1))
+	else:
 		set_modulate(Color(1.2,0.5,1))
 
 func _physics_process(delta):

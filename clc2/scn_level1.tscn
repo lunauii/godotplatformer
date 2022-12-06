@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://world_tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://plr_base.tscn" type="PackedScene" id=2]
@@ -34,6 +34,9 @@ font_data = ExtResource( 7 )
 [sub_resource type="DynamicFont" id=6]
 size = 72
 font_data = ExtResource( 7 )
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 13.5, 40 )
 
 [node name="scn_level1" type="Node2D"]
 
@@ -191,7 +194,8 @@ position = Vector2( 3264, -320 )
 
 [node name="obj_slime1" parent="enemies" instance=ExtResource( 10 )]
 position = Vector2( 856, 208 )
-direction = -1
+direction = 1
+canDetectEdge = false
 
 [node name="obj_slime2" parent="enemies" instance=ExtResource( 10 )]
 position = Vector2( 976, -48 )
@@ -204,6 +208,14 @@ direction = -1
 [node name="obj_slime4" parent="enemies" instance=ExtResource( 10 )]
 position = Vector2( 1760, 288 )
 direction = -1
+
+[node name="obj_slimewall" type="StaticBody2D" parent="."]
+collision_layer = 64
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="obj_slimewall"]
+position = Vector2( 1416.5, 476 )
+shape = SubResource( 7 )
 
 [connection signal="coin_collected" from="plr_main" to="HUD" method="_on_coin_collected"]
 [connection signal="body_entered" from="fallzone" to="plr_main" method="_on_fallzone_body_entered"]
