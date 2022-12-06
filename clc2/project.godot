@@ -1,3 +1,4 @@
+
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
 ; since the parameters that go here are not all obvious.
@@ -8,10 +9,38 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "HBoxContainer",
+"class": "ContributorClass",
+"language": "GDScript",
+"path": "res://addons/github-integration/scripts/ContributorClass.gd"
+}, {
+"base": "PanelContainer",
+"class": "GistItem",
+"language": "GDScript",
+"path": "res://addons/github-integration/scripts/GistItem.gd"
+}, {
+"base": "HBoxContainer",
+"class": "InvitationItem",
+"language": "GDScript",
+"path": "res://addons/github-integration/scripts/InvitationItem.gd"
+}, {
+"base": "PanelContainer",
+"class": "RepositoryItem",
+"language": "GDScript",
+"path": "res://addons/github-integration/scripts/RepositoryItem.gd"
+} ]
+_global_script_class_icons={
+"ContributorClass": "",
+"GistItem": "",
+"InvitationItem": "",
+"RepositoryItem": ""
+}
+
 [application]
 
 config/name="CLCProject"
-run/main_scene="res://scn_level1.tscn"
+run/main_scene="res://scn_titlemenu.tscn"
 config/icon="res://icon.png"
 
 [gui]
@@ -46,6 +75,7 @@ jump={
 2d_physics/layer_4="item"
 2d_physics/layer_5="enemy"
 2d_physics/layer_6="fireball"
+2d_physics/layer_7="slimewall"
 
 [physics]
 
