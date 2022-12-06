@@ -1,4 +1,4 @@
-extends KinematicBody2D
+	extends KinematicBody2D
 
 signal coin_collected
 
@@ -45,7 +45,7 @@ func _physics_process(delta):
 
 
 func _on_fallzone_body_entered(body):
-	get_tree().change_scene("res://scn_level1.tscn")
+	get_tree().change_scene("res://scn_losescreen.tscn")
 	
 
 func bounce():
@@ -74,4 +74,4 @@ func add_coin():
 	
 	
 func _on_Timer_timeout():
-	get_tree().change_scene("res://scn_level1.tscn")
+	get_tree().change_scene("res://scn_losescreen.tscn")
