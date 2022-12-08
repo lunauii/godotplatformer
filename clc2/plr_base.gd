@@ -35,9 +35,7 @@ func _physics_process(delta):
 		
 	if Input.is_action_pressed("jump") and is_on_floor():
 		velocity.y = JUMPFORCE
-	elif Input.is_action_just_pressed("jump") and jumpsLeft != 0:
-		velocity.y = JUMPFORCE
-		jumpsLeft -= 1
+		$sfx_jump.play()
 
 	velocity = move_and_slide(velocity, Vector2.UP)
 	

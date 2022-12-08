@@ -46,6 +46,7 @@ func _on_top_check_body_entered(body):
 		$side_check.set_collision_mask_bit(0, false)
 		$Timer.start()
 		body.bounce()
+		$sfx_squash.play()
 		
 func _on_side_check_body_entered(body):
 	if body.collision_layer == 1:
