@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://assets/fonts/Sniglet-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://assets/fonts/KiriFont.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Button.gd" type="Script" id=3]
+[ext_resource path="res://assets/fonts/BalsamiqSans-Bold.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://scn_win.gd" type="Script" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 70
@@ -13,9 +15,14 @@ font_data = ExtResource( 2 )
 size = 40
 font_data = ExtResource( 1 )
 
+[sub_resource type="DynamicFont" id=3]
+size = 48
+font_data = ExtResource( 4 )
+
 [node name="scn_win" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 5 )
 
 [node name="ColorRect" type="ColorRect" parent="."]
 margin_right = 1024.0
@@ -34,10 +41,10 @@ custom_fonts/font = SubResource( 1 )
 text = "u wni :D"
 
 [node name="goback" type="Button" parent="."]
-margin_left = 293.0
-margin_top = 325.0
-margin_right = 698.0
-margin_bottom = 414.0
+margin_left = 296.0
+margin_top = 387.0
+margin_right = 701.0
+margin_bottom = 476.0
 custom_colors/font_color_focus = Color( 1, 1, 1, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 0.247059, 0.560784, 0.729412, 1 )
@@ -46,5 +53,25 @@ text = "go bakc to main mnue"
 flat = true
 script = ExtResource( 3 )
 
-[connection signal="pressed" from="goback" to="goback" method="_on_Button_pressed"]
+[node name="Control" type="Control" parent="goback"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="timelabelwin" type="Label" parent="."]
+margin_left = 476.0
+margin_top = 243.0
+margin_right = 681.0
+margin_bottom = 302.0
+custom_fonts/font = SubResource( 3 )
+text = "XX.XX.XX"
+
+[node name="Time" type="Label" parent="."]
+margin_left = 342.0
+margin_top = 240.0
+margin_right = 547.0
+margin_bottom = 299.0
+custom_fonts/font = SubResource( 3 )
+text = "Time:"
+
 [connection signal="pressed" from="goback" to="goback" method="_on_goback_pressed"]
+[connection signal="pressed" from="goback" to="goback" method="_on_Button_pressed"]

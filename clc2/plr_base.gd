@@ -9,19 +9,27 @@ enum States {
 	WALL,
 }
 var state = States.AIR
+var time = preload("res://Global.tscn")
 
 var velocity = Vector2.ZERO
-var old_position = Vector2.ZERO
+var player_direction = 1
 const SPEED = 250
 const RUNSPEED = 480
 const GRAVITY = 30
 const JUMPFORCE = -950
 const TERMINALVELOCITY = 1000
+const FIREBALL = preload("res://Fireball.tscn")
+
+onready var dust_particles_placeholder = get_node("DustParticlesPlaceholder")
+onready var dust_particles_scene = preload("res://DustParticles.tscn")
 
 
 
 func _physics_process(delta):
-	print(velocity.x)
+	if $Sprite.flip_h == false:
+		player_direction = 1
+	else:
+		player_direction = -1
 	match state:
 		States.AIR:
 			if is_on_floor():
@@ -29,42 +37,43 @@ func _physics_process(delta):
 				continue
 			if Input.is_action_pressed("right"):
 				if Input.is_action_pressed("run"):
-					velocity.x = lerp(velocity.x, RUNSPEED, 0.1) if velocity.x < RUNSPEED else lerp(velocity.x, RUNSPEED, 0.04)
+					velocity.x = lerp(velocity.x, RUNSPEED, 0.2) if velocity.x < RUNSPEED else lerp(velocity.x, RUNSPEED, 0.08)
 					$Sprite.flip_h = false
 				else:
-					velocity.x = lerp(velocity.x, SPEED, 0.1) if velocity.x < SPEED else lerp(velocity.x, SPEED, 0.04)
+					velocity.x = lerp(velocity.x, SPEED, 0.2) if velocity.x < SPEED else lerp(velocity.x, SPEED, 0.08)
 					$Sprite.flip_h = false
 			elif Input.is_action_pressed("left"):
 				if Input.is_action_pressed("run"):
-					velocity.x = lerp(velocity.x, -RUNSPEED, 0.1)if velocity.x < RUNSPEED else lerp(velocity.x, -RUNSPEED, 0.04)
+					velocity.x = lerp(velocity.x, -RUNSPEED, 0.2)if velocity.x > RUNSPEED else lerp(velocity.x, -RUNSPEED, 0.08)
 					$Sprite.flip_h = true
 				else:
-					velocity.x = lerp(velocity.x, -SPEED, 0.1) if velocity.x < SPEED else lerp(velocity.x, -SPEED, 0.04)
+					velocity.x = lerp(velocity.x, -SPEED, 0.2) if velocity.x > SPEED else lerp(velocity.x, -SPEED, 0.08)
 					$Sprite.flip_h = true
 			else:
 				velocity.x = lerp(velocity.x, 0, 0.2)
 			$Sprite.play("jump")
 			move_and_fall() 
+			fire()
 			
 		States.FLOOR:
 			if not is_on_floor():
 				state = States.AIR
 			if Input.is_action_pressed("right"):
 				if Input.is_action_pressed("run"):
-					velocity.x = lerp(velocity.x, RUNSPEED, 0.1)
+					velocity.x = lerp(velocity.x, RUNSPEED, 0.2)
 					$Sprite.set_speed_scale(1.8)
 					$Sprite.flip_h = false
 				else:
-					velocity.x = lerp(velocity.x, SPEED, 0.1)
+					velocity.x = lerp(velocity.x, SPEED, 0.2)
 					$Sprite.set_speed_scale(1.0)
 					$Sprite.flip_h = false
 			elif Input.is_action_pressed("left"):
 				if Input.is_action_pressed("run"):
-					velocity.x = lerp(velocity.x, -RUNSPEED, 0.1)
+					velocity.x = lerp(velocity.x, -RUNSPEED, 0.2)
 					$Sprite.set_speed_scale(1.8)
 					$Sprite.flip_h = true
 				else:
-					velocity.x = lerp(velocity.x, -SPEED, 0.1)
+					velocity.x = lerp(velocity.x, -SPEED, 0.2)
 					$Sprite.set_speed_scale(1.0)
 					$Sprite.flip_h = true
 			else:
@@ -76,9 +85,18 @@ func _physics_process(delta):
 				
 			if Input.is_action_pressed("jump"):
 				velocity.y = JUMPFORCE
+				create_dust_particles()
 				$sfx_jump.play()
 			
 			move_and_fall() 
+			fire()
+
+
+
+func fire():
+	if Input.is_action_just_pressed("shoot"):
+		var fire = FIREBALL.instance()
+		get_parent().add_child(fire)
 
 
 
@@ -123,3 +141,10 @@ func add_coin():
 
 func _on_Timer_timeout():
 	get_tree().change_scene("res://scn_losescreen.tscn")
+
+	
+func create_dust_particles():
+	var dust_particles_instance = get_parent().get_node("HUD").initialize(dust_particles_scene, self)
+	dust_particles_instance.set_as_toplevel(true)
+	dust_particles_instance.scale.x = player_direction
+	dust_particles_instance.global_position = dust_particles_placeholder.global_position

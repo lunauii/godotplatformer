@@ -14,6 +14,9 @@ __meta__ = {
 "_edit_group_": true
 }
 
+[node name="DustParticlesPlaceholder" type="Position2D" parent="."]
+position = Vector2( 0, 48 )
+
 [node name="Sprite" type="AnimatedSprite" parent="."]
 frames = ExtResource( 1 )
 animation = "idle"
