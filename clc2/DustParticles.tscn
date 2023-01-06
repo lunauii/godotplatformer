@@ -1,11 +1,11 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://assets/particles/dust_particle.png" type="Texture" id=1]
+[ext_resource path="res://assets/particles/dustparticle.png" type="Texture" id=1]
 [ext_resource path="res://DustParticles.gd" type="Script" id=2]
 
 [sub_resource type="Curve" id=2]
 max_value = 2.0
-_data = [ Vector2( 0, 1.60227 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+_data = [ Vector2( 0, 0.495455 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=3]
 curve = SubResource( 2 )
@@ -24,7 +24,7 @@ scale_curve = SubResource( 3 )
 [node name="DustParticles" type="Particles2D"]
 position = Vector2( -13, 45 )
 emitting = false
-amount = 6
+amount = 5
 lifetime = 1.5
 one_shot = true
 speed_scale = 1.5

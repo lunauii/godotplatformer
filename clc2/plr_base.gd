@@ -13,12 +13,17 @@ var time = preload("res://Global.tscn")
 
 var velocity = Vector2.ZERO
 var player_direction = 1
+
 const SPEED = 250
 const RUNSPEED = 480
+const DASHSPEED = 9000
+const DASHDURATION = 0.2
 const GRAVITY = 30
 const JUMPFORCE = -950
 const TERMINALVELOCITY = 1000
-const FIREBALL = preload("res://Fireball.tscn")
+
+onready var animate = $Sprite
+onready var dash = $Dash
 
 onready var dust_particles_placeholder = get_node("DustParticlesPlaceholder")
 onready var dust_particles_scene = preload("res://DustParticles.tscn")
@@ -26,82 +31,77 @@ onready var dust_particles_scene = preload("res://DustParticles.tscn")
 
 
 func _physics_process(delta):
-	if $Sprite.flip_h == false:
-		player_direction = 1
-	else:
-		player_direction = -1
+	print(velocity.y)
+	
+	var move_direction = get_move_direction()
+	play_animation(move_direction)
+
+	if Input.is_action_just_pressed("dash") && dash.can_dash && !dash.is_dashing():
+		velocity = lerp(velocity, DASHSPEED * move_direction.normalized(), 0.2)
+		dash.start_dash(DASHDURATION)
+		velocity.x *= 2
+		velocity.y *= 0.66
+		
+		
+	print(move_direction.normalized())
+		
 	match state:
 		States.AIR:
 			if is_on_floor():
 				state = States.FLOOR
 				continue
-			if Input.is_action_pressed("right"):
+			
+			if move_direction.normalized()[0] != 0:
 				if Input.is_action_pressed("run"):
-					velocity.x = lerp(velocity.x, RUNSPEED, 0.2) if velocity.x < RUNSPEED else lerp(velocity.x, RUNSPEED, 0.08)
-					$Sprite.flip_h = false
+					velocity.x = lerp(velocity.x, RUNSPEED * move_direction.normalized()[0], 0.2)
 				else:
-					velocity.x = lerp(velocity.x, SPEED, 0.2) if velocity.x < SPEED else lerp(velocity.x, SPEED, 0.08)
-					$Sprite.flip_h = false
-			elif Input.is_action_pressed("left"):
-				if Input.is_action_pressed("run"):
-					velocity.x = lerp(velocity.x, -RUNSPEED, 0.2)if velocity.x > RUNSPEED else lerp(velocity.x, -RUNSPEED, 0.08)
-					$Sprite.flip_h = true
-				else:
-					velocity.x = lerp(velocity.x, -SPEED, 0.2) if velocity.x > SPEED else lerp(velocity.x, -SPEED, 0.08)
-					$Sprite.flip_h = true
+					velocity.x = lerp(velocity.x, SPEED * move_direction.normalized()[0], 0.2)
 			else:
 				velocity.x = lerp(velocity.x, 0, 0.2)
-			$Sprite.play("jump")
+			animate.play("jump")
 			move_and_fall() 
-			fire()
-			
+
+
+
 		States.FLOOR:
 			if not is_on_floor():
 				state = States.AIR
-			if Input.is_action_pressed("right"):
+			
+			if move_direction.normalized()[0] != 0:
 				if Input.is_action_pressed("run"):
-					velocity.x = lerp(velocity.x, RUNSPEED, 0.2)
-					$Sprite.set_speed_scale(1.8)
-					$Sprite.flip_h = false
+					velocity.x = lerp(velocity.x, RUNSPEED * move_direction.normalized()[0], 0.2)
+					animate.set_speed_scale(1.8)
 				else:
-					velocity.x = lerp(velocity.x, SPEED, 0.2)
-					$Sprite.set_speed_scale(1.0)
-					$Sprite.flip_h = false
-			elif Input.is_action_pressed("left"):
-				if Input.is_action_pressed("run"):
-					velocity.x = lerp(velocity.x, -RUNSPEED, 0.2)
-					$Sprite.set_speed_scale(1.8)
-					$Sprite.flip_h = true
-				else:
-					velocity.x = lerp(velocity.x, -SPEED, 0.2)
-					$Sprite.set_speed_scale(1.0)
-					$Sprite.flip_h = true
+					velocity.x = lerp(velocity.x, SPEED * move_direction.normalized()[0], 0.2)
+					animate.set_speed_scale(1.0)
 			else:
 				velocity.x = lerp(velocity.x, 0, 0.2)
-			if Input.is_action_pressed("left") or Input.is_action_pressed("right"):
-				$Sprite.play("walk")
-			else:
-				$Sprite.play("idle")
-				
 			if Input.is_action_pressed("jump"):
 				velocity.y = JUMPFORCE
 				create_dust_particles()
 				$sfx_jump.play()
 			
 			move_and_fall() 
-			fire()
 
 
 
-func fire():
-	if Input.is_action_just_pressed("shoot"):
-		var fire = FIREBALL.instance()
-		get_parent().add_child(fire)
+func get_move_direction():
+	return Vector2(
+		int(Input.is_action_pressed("ui_right")) - int(Input.is_action_pressed("ui_left")),
+		int(Input.is_action_pressed("ui_down")) - int(Input.is_action_pressed("ui_up"))
+		
+	)
 
-
+func play_animation(move_direction):
+	if move_direction == Vector2.ZERO:
+		animate.play("idle")
+	else:
+		animate.flip_h = move_direction.x < 0
+		animate.play("walk")
 
 func move_and_fall():
 	velocity.y = velocity.y+GRAVITY
+	
 	if velocity.y >= TERMINALVELOCITY:
 		velocity.y = TERMINALVELOCITY
 	velocity = move_and_slide(velocity, Vector2.UP)
@@ -117,6 +117,8 @@ func bounce():
 
 
 func hurt(var enemyposx):
+	if dash.is_dashing():
+		return
 	set_modulate(Color(1, 0.3, 0.3, 0.34))
 	velocity.y = JUMPFORCE * 0.5
 	

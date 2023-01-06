@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://plr_spriteframes.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://plr_base.gd" type="Script" id=2]
 [ext_resource path="res://assets/sounds/jump1.ogg" type="AudioStream" id=3]
+[ext_resource path="res://Dash.tscn" type="PackedScene" id=4]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 27.0
@@ -33,5 +34,7 @@ one_shot = true
 stream = ExtResource( 3 )
 volume_db = -16.0
 pitch_scale = 1.4
+
+[node name="Dash" parent="." instance=ExtResource( 4 )]
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
