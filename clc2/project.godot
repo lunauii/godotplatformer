@@ -17,6 +17,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Global="*res://Global.gd"
+LevelList="*res://level_list.gd"
 
 [gui]
 
@@ -55,6 +56,8 @@ dash={
 2d_physics/layer_5="enemy"
 2d_physics/layer_6="fireball"
 2d_physics/layer_7="slimewall"
+2d_physics/layer_8="oneway"
+2d_physics/layer_9="leveldoor"
 
 [physics]
 

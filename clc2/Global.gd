@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 var time_now = 0
 var time_start = 0

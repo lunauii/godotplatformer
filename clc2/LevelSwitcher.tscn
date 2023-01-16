@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scn_level1.tscn" type="PackedScene" id=1]
+[ext_resource path="res://LevelSwitcher.gd" type="Script" id=2]
+
+[node name="LevelSwitcher" type="Node"]
+script = ExtResource( 2 )
+
+[node name="scn_level1" parent="." instance=ExtResource( 1 )]
+
+[connection signal="level_changed" from="scn_level1/LevelDoor" to="." method="_on_LevelDoor_level_changed"]
+
+[editable path="scn_level1"]
